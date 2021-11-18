@@ -11,25 +11,26 @@ class MyIterator
 {
 private:
 	T* ptr{};
-	
+
 private:
 	friend class Array<T>;
 public:
+	
+	using difference_type = ptrdiff_t;
+	using pointer = T*;
+	using reference = T&;
+
+	//Требования последовательного итератора
+
 	MyIterator() {}
-	
+
 	MyIterator(T* _ptr) : ptr{ _ptr } {}
-
-	
-
-	
-
-	//-------------------------
 
 	MyIterator(const MyIterator& it) : MyIterator(it.ptr) {}
 
-	bool operator==(const MyIterator& lhs, const MyIterator& rhs) { return lhs.ptr == rhs.ptr; }
+	friend bool operator==(const MyIterator& lhs, const MyIterator& rhs) { return lhs.ptr == rhs.ptr; }
 
-	bool operator!=(const MyIterator& lhs, const MyIterator& rhs) { return !(lhs == rhs); }
+	friend bool operator!=(const MyIterator& lhs, const MyIterator& rhs) { return !(lhs.ptr == rhs.ptr); }
 
 	MyIterator& operator=(const MyIterator& it)
 	{
@@ -40,12 +41,11 @@ public:
 		return *this;
 	}
 
-	reference operator*() { return *ptr; }
+	reference operator*() const { return *((*this).ptr); }
 
 	MyIterator& operator++() { ++ptr; return *this; }
 
 	MyIterator operator++(T) { auto tmp = *this; ++(*this); return tmp; }
-
 
 	//Требования двунаправленного итератора (в дополнение к последовательному итератору)
 
@@ -68,25 +68,25 @@ public:
 		return *this;
 	}
 
-	MyIterator operator+(MyIterator it, MyIterator::difference_type n) { auto tmp = it; return tmp += n; }
+	MyIterator operator+(MyIterator::difference_type n) { auto tmp = *this; return tmp += n; }
 
-	MyIterator operator+(MyIterator::difference_type n, MyIterator it) { return it + n; }
+	friend MyIterator operator+(MyIterator::difference_type n, MyIterator it) { return it + n; }
 
 	MyIterator operator-=(difference_type n) { return *this += -n; }
 
-	MyIterator operator-(MyIterator it, difference_type n) { auto tmp = it; return tmp -= n; }
+	MyIterator operator-(difference_type n) { auto tmp = *this; return tmp -= n; }
 
-	difference_type operator-(const MyIterator& lhs, const MyIterator& rhs) { lhs.ptr - rhs.ptr; }
-		
-	reference operator[](difference_type n) { *(*this + n); }
+	friend difference_type operator-(const MyIterator& lhs, const MyIterator& rhs) { return rhs.ptr - lhs.ptr; }
 
-	bool operator<(const MyIterator& lhs, const MyIterator& rhs) { return (rhs.ptr - lhs.ptr) > 0; }
+	reference operator[](difference_type n) { return *(*this + n); }
 
-	bool operator>(const MyIterator& lhs, const MyIterator& rhs) { return rhs < lhs; }
+	bool operator<(const MyIterator& rhs) { return (rhs.ptr - (*this).ptr) > 0; }
 
-	bool operator>=(const MyIterator& lhs, const MyIterator& rhs) { return !(lhs < rhs); }
+	bool operator>(const MyIterator& rhs) { return rhs < *this; }
 
-	bool operator<=(const MyIterator& lhs, const MyIteratoe& rhs) { return !(lhs > rhs); }
+	bool operator>=(const MyIterator& rhs) { return !(*this < rhs); }
+
+	bool operator<=(const MyIterator& rhs) { return !(*this > rhs); }
 
 };
 
