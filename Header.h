@@ -1,65 +1,66 @@
 #pragma once
 
-#include <vector>
-#include <random>
+template <typename T>
+class MyIterator;
 
-class ExceptionCaughtFish : public std::exception
-{
-public:
-	const char* what() const noexcept override
-	{
-		return "You caught a fish!";
-	}
-};
-
-class ExceptionCaughtBoot : public std::exception
-{
-public:
-	const char* what() const noexcept override
-	{
-		return "You caught a boot!";
-	}
-};
-
-class ExceptionInvalidSectorNumber : public std::exception
-{
-public:
-	const char* what() const noexcept override
-	{
-		return "Invalid sector number!";
-	}
-};
-
-class Pond
+template <typename T>
+class Array
 {
 private:
-	char signEmpty{ ' ' };
-	char signFish{ 'f' };
-	char signBoot{ 'b' };
-
-	const int numberOfFish{ 1 };
-	const int numberOfBoots{ 3 };
-
-	const int size{ 3 };
-	std::vector<std::vector<char>> pond;
-
-	std::random_device rd;
-	std::default_random_engine dre;
-	std::uniform_int_distribution<int> uid;
-
-	void distributionOfEntities(int numberOfEntities, char entity);
-
+	T* mass;
+	size_t size;
 public:
-	Pond() : dre{ rd() }, uid{ std::uniform_int_distribution<int>(0, size - 1) }
-	{
-		pond.resize(size, std::vector<char>(size, signEmpty));
+	Array() : mass{ nullptr }, size{} {}
 
-		distributionOfEntities(numberOfFish, signFish);
-		distributionOfEntities(numberOfBoots, signBoot);
+	Array(size_t _size) : size{ _size }
+	{
+		mass = new T[size];
 	}
 
-	void pullFishingRod(int numberOfSector);
+	Array(const std::initializer_list<T>& iList) : Array(iList.size())
+	{
+		size_t idx{};
 
-	void output() const;
+		for (const auto& elem : iList)
+		{
+			mass[idx] = elem;
+			++idx;
+		}
+	}
 
+	~Array()
+	{
+		delete[] mass;
+	}
+
+	T& operator[](size_t idx)
+	{
+		return mass[idx];
+	}
+
+	typedef MyIterator<T> iterator;
+	typedef MyIterator<const T> const_iterator;
+
+	iterator begin()
+	{
+		return iterator(mass);
+	}
+
+	iterator end()
+	{
+		return iterator(mass + size);
+	}
+
+	const_iterator begin() const
+	{
+		return const_iterator(mass);
+	}
+
+	const_iterator end() const
+	{
+		return const_iterator(mass + size);
+	}
 };
+
+
+
