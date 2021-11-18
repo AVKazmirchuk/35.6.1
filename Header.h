@@ -41,22 +41,32 @@ public:
 	typedef MyIterator<T> iterator;
 	typedef MyIterator<const T> const_iterator;
 
-	iterator begin()
+	iterator begin() 
 	{
 		return iterator(mass);
 	}
 
-	iterator end()
+	iterator end() 
 	{
 		return iterator(mass + size);
 	}
 
-	const_iterator begin() const
+	iterator begin() const 
+	{
+		return iterator(mass);
+	}
+
+	iterator end() const
+	{
+		return iterator(mass + size);
+	}
+
+	const_iterator cbegin() const
 	{
 		return const_iterator(mass);
 	}
 
-	const_iterator end() const
+	const_iterator cend() const
 	{
 		return const_iterator(mass + size);
 	}
