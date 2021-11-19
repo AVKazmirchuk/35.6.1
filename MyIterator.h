@@ -1,76 +1,103 @@
+#include <iterator>
+
+
 #pragma once
 
 template <typename T>
-class MyIterator;
+class Array;
 
 template <typename T>
-class Array
+class MyIterator
 {
 private:
-	T* mass;
-	size_t size;
+	T* ptr{};
+
+private:
+	friend class Array<T>;
 public:
-	Array() : mass{ nullptr }, size{} {}
+	
+	using difference_type = ptrdiff_t;
+	using pointer = T*;
+	using reference = T&;
 
-	Array(size_t _size) : size{ _size }
+	//Требования последовательного итератора
+
+	MyIterator() {}
+
+	MyIterator(T* _ptr) : ptr{ _ptr } {}
+
+	MyIterator(const MyIterator& it) : MyIterator(it.ptr) {}
+
+	friend bool operator==(const MyIterator& lhs, const MyIterator& rhs) { return lhs.ptr == rhs.ptr; }
+
+	friend bool operator!=(const MyIterator& lhs, const MyIterator& rhs) { return !(lhs.ptr == rhs.ptr); }
+
+	MyIterator& operator=(const MyIterator& it)
 	{
-		mass = new T[size];
+		if (this == &it) return *this;
+
+		ptr = it.ptr;
+
+		return *this;
 	}
 
-	Array(const std::initializer_list<T>& iList) : Array(iList.size())
-	{
-		size_t idx{};
+	reference operator*() const { return *((*this).ptr); }
 
-		for (const auto& elem : iList)
-		{
-			mass[idx] = elem;
-			++idx;
-		}
+	MyIterator& operator++() { ++ptr; return *this; }
+
+	MyIterator operator++(T) { auto tmp = *this; ++(*this); return tmp; }
+
+	//Требования двунаправленного итератора (в дополнение к последовательному итератору)
+
+	MyIterator& operator--() { --ptr; return *this; }
+
+	MyIterator operator--(T) { auto tmp = *this; --(*this); return tmp; }
+
+	//Требования итератора произвольного доступа (в дополнение к двунаправленному итератору)
+
+	MyIterator& operator+=(difference_type n)
+	{
+		auto m = n;
+		if (m >= 0)
+			while (m--)
+				++(*this);
+		else
+			while (m++)
+				--(*this);
+
+		return *this;
 	}
 
-	~Array()
-	{
-		delete[] mass;
-	}
+	MyIterator operator+(MyIterator::difference_type n) { auto tmp = *this; return tmp += n; }
 
-	T& operator[](size_t idx)
-	{
-		return mass[idx];
-	}
+	friend MyIterator operator+(MyIterator::difference_type n, MyIterator it) { return it + n; }
 
-	typedef MyIterator<T> iterator;
-	typedef MyIterator<const T> const_iterator;
+	MyIterator operator-=(difference_type n) { return *this += -n; }
 
-	iterator begin() 
-	{
-		return iterator(mass);
-	}
+	MyIterator operator-(difference_type n) { auto tmp = *this; return tmp -= n; }
 
-	iterator end() 
-	{
-		return iterator(mass + size);
-	}
+	friend difference_type operator-(const MyIterator& lhs, const MyIterator& rhs) { return rhs.ptr - lhs.ptr; }
 
-	iterator begin() const 
-	{
-		return iterator(mass);
-	}
+	reference operator[](difference_type n) { return *(*this + n); }
 
-	iterator end() const
-	{
-		return iterator(mass + size);
-	}
+	bool operator<(const MyIterator& rhs) { return (rhs.ptr - (*this).ptr) > 0; }
 
-	const_iterator cbegin() const
-	{
-		return const_iterator(mass);
-	}
+	bool operator>(const MyIterator& rhs) { return rhs < *this; }
 
-	const_iterator cend() const
-	{
-		return const_iterator(mass + size);
-	}
+	bool operator>=(const MyIterator& rhs) { return !(*this < rhs); }
+
+	bool operator<=(const MyIterator& rhs) { return !(*this > rhs); }
+
 };
 
 
 
+template <typename T>
+struct std::iterator_traits<MyIterator<T>>
+{
+	using iterator_category = std::random_access_iterator_tag;
+	using value_type = T;
+	using difference_type = ptrdiff_t;
+	using pointer = T*;
+	using reference = T&;
+};
