@@ -16,34 +16,53 @@ private:
 	friend class Array<T>;
 public:
 	
+	using iterator_category = std::random_access_iterator_tag;
+	using value_type = T;
 	using difference_type = ptrdiff_t;
 	using pointer = T*;
 	using reference = T&;
 
+
+
+	pointer operator->() const
+	{
+		return this->ptr;
+	}
+
+	void swap(MyIterator& lhs, MyIterator& rhs) { std::swap(lhs.ptr, rhs.ptr); }
+
+
+
 	//Требования последовательного итератора
 
-	MyIterator() {}
+	MyIterator() = default;
 
 	MyIterator(T* _ptr) : ptr{ _ptr } {}
 
-	MyIterator(const MyIterator& it) : MyIterator(it.ptr) {}
+	MyIterator(const MyIterator& it) = default;
 
 	friend bool operator==(const MyIterator& lhs, const MyIterator& rhs) { return lhs.ptr == rhs.ptr; }
 
 	friend bool operator!=(const MyIterator& lhs, const MyIterator& rhs) { return !(lhs.ptr == rhs.ptr); }
 
-	MyIterator& operator=(const MyIterator& it)
+	MyIterator& operator=(const MyIterator& it) = default;
+
+	~MyIterator() = default;
+
+	/*MyIterator& operator=(const MyIterator& it)
 	{
 		if (this == &it) return *this;
 
 		ptr = it.ptr;
 
 		return *this;
-	}
+	}*/
 
-	reference operator*() const { return *((*this).ptr); }
+	reference operator*() { return *((*this).ptr); }
 
-	MyIterator& operator++() { ++ptr; return *this; }
+	const reference operator*() const { return *((*this).ptr); }
+
+	MyIterator& operator++() { ++this->ptr; return *this; }
 
 	MyIterator operator++(T) { auto tmp = *this; ++(*this); return tmp; }
 
