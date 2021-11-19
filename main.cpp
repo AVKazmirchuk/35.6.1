@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <array>
 #include <vector>
+#include <functional>
 
 #include "Array.h"
 #include "MyIterator.h"
@@ -35,12 +36,25 @@ int main()
     for (auto x : arr2) std::cout << x << ' ';
     std::cout << '\n';
 
-    std::for_each(arr2.begin(), arr2.end(), [=](auto& elem) {
-        elem += *arr2.begin();
+    std::for_each(arr2.begin(), arr2.end(), [value{ *arr2.begin() }](auto& elem) {
+        std::cout << "!!!"; elem += value; std::cout << "???";
         });
-    for (auto x : arr2) std::cout << x << ' ';
+    std::cout << "***";
+    for (auto&& x : arr2) std::cout << x << ' ';
     std::cout << '\n';
 
+    std::transform(arr2.begin(), arr2.end(), arr2.begin(), [=](auto elem) {
+        std::cout << "!!!"; return elem + *arr2.begin(); std::cout << "???";
+        });
+
+    /*for (auto&& elem : arr2)
+    {
+        elem += *arr2.begin();
+    }
+    for (auto&& x : arr2) std::cout << x << ' ';
+    std::cout << '\n';*/
+
+    std::vector<int> v;
     
 }
 
