@@ -10,19 +10,19 @@
 int main()
 {
     std::cout << "Static mass:        ";
-    
+
     int arr[9] = { 3, 5, 1, 4, 7, 2, 9, 6, 8 };
 
     MyIterator first(arr), last(arr + 9);
 
     for (auto& elem : arr) std::cout << elem << ' ';
     std::cout << '\n';
-    
+
     std::cout << "std::sort<less>:    ";
     std::sort(first, last);
     for (auto& elem : arr) std::cout << elem << ' ';
     std::cout << '\n';
-    
+
     std::cout << "std::sort<greater>: ";
     std::sort(first, last, std::greater{});
     for (auto& elem : arr) std::cout << elem << ' ';
@@ -31,11 +31,11 @@ int main()
     auto [min_it, max_it](std::minmax_element(first, last));
     std::cout << "min: " << *min_it << ", max: " << *max_it;
     std::cout << "\n\n";
-    
+
     //----------
-    
+
     std::cout << "Array:                          ";
-    
+
     Array<int> arr2 = { 3, 5, 1, 4, 7, 2, 9, 6, 8 };
 
     for (const auto& elem : arr2) std::cout << elem << ' ';
@@ -54,7 +54,7 @@ int main()
 
     auto [min_it2, max_it2](std::minmax_element(arr2.cbegin() + 1, --arr2.cend()));
     std::cout << "min: " << *min_it2 << ", max: " << *max_it2 << '\n';
-    
+
     std::cout << "std::for_each, output:          ";
     std::for_each(arr2.cbegin(), arr2.cend(), [](auto& elem) { std::cout << elem << " "; });
     std::cout << '\n';
@@ -78,7 +78,7 @@ int main()
         return elem + *arr2.begin(); });
     for (auto&& elem : arr2) std::cout << elem << ' ';
     std::cout << '\n';*/
-    
+
     std::cout << "std::for_each, output (reverse_iterator):          ";
     std::for_each(arr2.crbegin(), arr2.crend(), [](auto& elem) { std::cout << elem << " "; });
     std::cout << '\n';

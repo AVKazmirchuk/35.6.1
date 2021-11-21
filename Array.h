@@ -7,72 +7,72 @@ template <typename T>
 class Array
 {
 private:
-	T* mass;
-	size_t size;
+    T* mass;
+    size_t size;
 public:
-	Array() : mass{ nullptr }, size{} {}
+    Array() : mass{ nullptr }, size{} {}
 
-	Array(size_t _size) : size{ _size }
-	{
-		mass = new T[size];
-	}
+    Array(size_t _size) : size{ _size }
+    {
+        mass = new T[size];
+    }
 
-	Array(const std::initializer_list<T>& iList) : Array(iList.size())
-	{
-		size_t idx{};
+    Array(const std::initializer_list<T>& iList) : Array(iList.size())
+    {
+        size_t idx{};
 
-		for (const auto& elem : iList)
-		{
-			mass[idx] = elem;
-			++idx;
-		}
-	}
+        for (const auto& elem : iList)
+        {
+            mass[idx] = elem;
+            ++idx;
+        }
+    }
 
-	~Array()
-	{
-		delete[] mass;
-	}
+    ~Array()
+    {
+        delete[] mass;
+    }
 
-	T& operator[](size_t idx) { return mass[idx]; }
+    T& operator[](size_t idx) { return mass[idx]; }
 
-	const T& operator[](size_t idx) const { return mass[idx]; }
+    const T& operator[](size_t idx) const { return mass[idx]; }
 
-	//Определение типов итераторов
+    //РћРїСЂРµРґРµР»РµРЅРёРµ С‚РёРїРѕРІ РёС‚РµСЂР°С‚РѕСЂРѕРІ
 
-	using iterator = MyIterator<T>;
-	using const_iterator = MyIterator<const T>;
-	using reverse_iterator = std::reverse_iterator<MyIterator<T>>;
-	using const_reverse_iterator = std::reverse_iterator<MyIterator<const T>>;
+    using iterator = MyIterator<T>;
+    using const_iterator = MyIterator<const T>;
+    using reverse_iterator = std::reverse_iterator<MyIterator<T>>;
+    using const_reverse_iterator = std::reverse_iterator<MyIterator<const T>>;
 
-	//Прямой итератор
+    //РџСЂСЏРјРѕР№ РёС‚РµСЂР°С‚РѕСЂ
 
-	iterator begin() { return iterator(mass); }
+    iterator begin() { return iterator(mass); }
 
-	iterator end() { return iterator(mass + size); }
+    iterator end() { return iterator(mass + size); }
 
-	iterator begin() const { return iterator(mass); }
+    iterator begin() const { return iterator(mass); }
 
-	iterator end() const { return iterator(mass + size); }
+    iterator end() const { return iterator(mass + size); }
 
-	const_iterator cbegin() const { return const_iterator(mass); }
+    const_iterator cbegin() const { return const_iterator(mass); }
 
-	const_iterator cend() const { return const_iterator(mass + size); }
+    const_iterator cend() const { return const_iterator(mass + size); }
 
-	//Обратный итератор
+    //РћР±СЂР°С‚РЅС‹Р№ РёС‚РµСЂР°С‚РѕСЂ
 
-	reverse_iterator rbegin() { return reverse_iterator(mass + size); }
+    reverse_iterator rbegin() { return reverse_iterator(mass + size); }
 
-	reverse_iterator rend() { return reverse_iterator(mass); }
-	
-	reverse_iterator rbegin() const { return reverse_iterator(mass + size); }
+    reverse_iterator rend() { return reverse_iterator(mass); }
 
-	reverse_iterator rend() const { return reverse_iterator(mass); }
+    reverse_iterator rbegin() const { return reverse_iterator(mass + size); }
 
-	const_reverse_iterator crbegin() const { return const_reverse_iterator(mass + size); }
+    reverse_iterator rend() const { return reverse_iterator(mass); }
 
-	const_reverse_iterator crend() const { return const_reverse_iterator(mass); }
+    const_reverse_iterator crbegin() const { return const_reverse_iterator(mass + size); }
 
-	
+    const_reverse_iterator crend() const { return const_reverse_iterator(mass); }
+
+
 
 
 };

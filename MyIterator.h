@@ -10,110 +10,110 @@ class MyIterator
 {
 private:
 
-	T* ptr{};
+    T* ptr{};
 
 private:
 
-	friend class Array<T>;
+    friend class Array<T>;
 
 public:
 
-	using iterator_category = std::random_access_iterator_tag;
-	using value_type = T;
-	using difference_type = std::ptrdiff_t;
-	using pointer = T*;
-	using reference = T&;
-	
-	MyIterator(T* _ptr) : ptr{ _ptr } {}
+    using iterator_category = std::random_access_iterator_tag;
+    using value_type = T;
+    using difference_type = std::ptrdiff_t;
+    using pointer = T*;
+    using reference = T&;
 
-	
-	//Требования последовательного итератора
+    MyIterator(T* _ptr) : ptr{ _ptr } {}
 
 
-	MyIterator() {};
-
-	MyIterator(const MyIterator& it)
-	{
-		ptr = it.ptr;
-	}
-
-	MyIterator& operator=(const MyIterator& it)
-	{
-		if (this == &it) return *this;
-
-		ptr = it.ptr;
-
-		return *this;
-	}
-
-	~MyIterator() {};
-
-	friend bool operator==(const MyIterator& lhs, const MyIterator& rhs) { return lhs.ptr == rhs.ptr; }
-
-	friend bool operator!=(const MyIterator& lhs, const MyIterator& rhs) { return !(lhs.ptr == rhs.ptr); }
-	//----------
-	reference operator*() { return *(this->ptr); }
-	const reference operator*() const { return *(this->ptr); }
-	//----------
-	MyIterator& operator++() { ++this->ptr; return *this; }
-
-	MyIterator operator++(T) { MyIterator tmp = *this; ++(*this); return tmp; }
+    //РўСЂРµР±РѕРІР°РЅРёСЏ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕРіРѕ РёС‚РµСЂР°С‚РѕСЂР°
 
 
-	//Требования двунаправленного итератора (в дополнение к последовательному итератору)
+    MyIterator() {};
+
+    MyIterator(const MyIterator& it)
+    {
+        ptr = it.ptr;
+    }
+
+    MyIterator& operator=(const MyIterator& it)
+    {
+        if (this == &it) return *this;
+
+        ptr = it.ptr;
+
+        return *this;
+    }
+
+    ~MyIterator() {};
+
+    friend bool operator==(const MyIterator& lhs, const MyIterator& rhs) { return lhs.ptr == rhs.ptr; }
+
+    friend bool operator!=(const MyIterator& lhs, const MyIterator& rhs) { return !(lhs.ptr == rhs.ptr); }
+    //----------
+    reference operator*() { return *(this->ptr); }
+    const reference operator*() const { return *(this->ptr); }
+    //----------
+    MyIterator& operator++() { ++this->ptr; return *this; }
+
+    MyIterator operator++(T) { MyIterator tmp = *this; ++(*this); return tmp; }
 
 
-	MyIterator& operator--() { --this->ptr; return *this; }
-
-	MyIterator operator--(T) { MyIterator tmp = *this; --(*this); return tmp; }
+    //РўСЂРµР±РѕРІР°РЅРёСЏ РґРІСѓРЅР°РїСЂР°РІР»РµРЅРЅРѕРіРѕ РёС‚РµСЂР°С‚РѕСЂР° (РІ РґРѕРїРѕР»РЅРµРЅРёРµ Рє РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕРјСѓ РёС‚РµСЂР°С‚РѕСЂСѓ)
 
 
-	//Требования итератора произвольного доступа (в дополнение к двунаправленному итератору)
+    MyIterator& operator--() { --this->ptr; return *this; }
 
-	
-	MyIterator& operator+=(const difference_type n)
-	{
-		difference_type m = n;
-		if (m >= 0)
-			while (m--) ++(*this);
-		else
-			while (m++) --(*this);
-
-		return *this;
-	}
-
-	MyIterator& operator-=(const difference_type n) { return *this += -n; }
-
-	MyIterator operator+(const difference_type n) { MyIterator tmp = *this; return tmp += n; }
-
-	MyIterator operator-(const difference_type n) { MyIterator tmp = *this; return tmp -= n; }
-	
-	friend MyIterator operator+(const difference_type n, MyIterator it) { return it + n; }
-	//----------
-	reference operator[](const difference_type n) { return *(*this + n); }
-	const reference operator[](const difference_type n) const { return *(*this + n); }
-	//----------   
-	friend difference_type operator-(const MyIterator& lhs, const MyIterator& rhs) { return lhs.ptr - rhs.ptr; }
-	   
-	friend bool operator<(const MyIterator& lhs, const MyIterator& rhs) { return (rhs - lhs) > 0; }
-
-	friend bool operator>(const MyIterator& lhs, const MyIterator& rhs) { return rhs < lhs; }
-
-	friend bool operator>=(const MyIterator& lhs, const MyIterator& rhs) { return !(lhs < rhs); }
-
-	friend bool operator<=(const MyIterator& lhs, const MyIterator& rhs) { return !(lhs > rhs); }
+    MyIterator operator--(T) { MyIterator tmp = *this; --(*this); return tmp; }
 
 
-	void swap(MyIterator& lhs, MyIterator& rhs) { std::swap(lhs.ptr, rhs.ptr); }
+    //РўСЂРµР±РѕРІР°РЅРёСЏ РёС‚РµСЂР°С‚РѕСЂР° РїСЂРѕРёР·РІРѕР»СЊРЅРѕРіРѕ РґРѕСЃС‚СѓРїР° (РІ РґРѕРїРѕР»РЅРµРЅРёРµ Рє РґРІСѓРЅР°РїСЂР°РІР»РµРЅРЅРѕРјСѓ РёС‚РµСЂР°С‚РѕСЂСѓ)
+
+
+    MyIterator& operator+=(const difference_type n)
+    {
+        difference_type m = n;
+        if (m >= 0)
+            while (m--) ++(*this);
+        else
+            while (m++) --(*this);
+
+        return *this;
+    }
+
+    MyIterator& operator-=(const difference_type n) { return *this += -n; }
+
+    MyIterator operator+(const difference_type n) { MyIterator tmp = *this; return tmp += n; }
+
+    MyIterator operator-(const difference_type n) { MyIterator tmp = *this; return tmp -= n; }
+
+    friend MyIterator operator+(const difference_type n, MyIterator it) { return it + n; }
+    //----------
+    reference operator[](const difference_type n) { return *(*this + n); }
+    const reference operator[](const difference_type n) const { return *(*this + n); }
+    //----------
+    friend difference_type operator-(const MyIterator& lhs, const MyIterator& rhs) { return lhs.ptr - rhs.ptr; }
+
+    friend bool operator<(const MyIterator& lhs, const MyIterator& rhs) { return (rhs - lhs) > 0; }
+
+    friend bool operator>(const MyIterator& lhs, const MyIterator& rhs) { return rhs < lhs; }
+
+    friend bool operator>=(const MyIterator& lhs, const MyIterator& rhs) { return !(lhs < rhs); }
+
+    friend bool operator<=(const MyIterator& lhs, const MyIterator& rhs) { return !(lhs > rhs); }
+
+
+    void swap(MyIterator& lhs, MyIterator& rhs) { std::swap(lhs.ptr, rhs.ptr); }
 
 };
 
 template <typename T>
 struct std::iterator_traits<MyIterator<T>>
 {
-	using iterator_category = std::random_access_iterator_tag;
-	using value_type = T;
-	using difference_type = std::ptrdiff_t;
-	using pointer = T*;
-	using reference = T&;
+    using iterator_category = std::random_access_iterator_tag;
+    using value_type = T;
+    using difference_type = std::ptrdiff_t;
+    using pointer = T*;
+    using reference = T&;
 };
